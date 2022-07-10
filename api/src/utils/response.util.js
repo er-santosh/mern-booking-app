@@ -23,10 +23,7 @@ const ResponseHandler = (req, res, next) => {
   };
 
   res.fetched = (data) => {
-    return res.status(200).json({
-      status: 200,
-      data: data,
-    });
+    return res.status(200).json(data);
   };
 
   res.success = (message, data) => {

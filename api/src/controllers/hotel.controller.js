@@ -2,7 +2,7 @@ import hotelService from "../services/hotel.service.js";
 
 export const getAllHotel = async (req, res, next) => {
   try {
-    const hotels = await hotelService.findAll();
+    const hotels = await hotelService.findAll(req.query);
     res.fetched(hotels);
   } catch (err) {
     next(err);
@@ -64,5 +64,40 @@ export const removeRoom = async (req, res, next) => {
     res.updated("Hotel", hotelUpdated);
   } catch (error) {
     next(error);
+  }
+};
+
+export const countByCity = async (req, res, next) => {
+  const cities = req.query.cities.split(",");
+  try {
+    const list = await Promise.all(
+      cities.map((city) => {
+        return hotelService.countDocuments({ city });
+      })
+    );
+    res.fetched(list);
+  } catch (err) {
+    next(err);
+  }
+};
+export const countByType = async (req, res, next) => {
+  try {
+    const hotelCount = await hotelService.countDocuments({ type: "hotel" });
+    const apartmentCount = await hotelService.countDocuments({
+      type: "apartment",
+    });
+    const resortCount = await hotelService.countDocuments({ type: "resort" });
+    const villaCount = await hotelService.countDocuments({ type: "villa" });
+    const cabinCount = await hotelService.countDocuments({ type: "cabin" });
+
+    res.fetched([
+      { type: "hotel", count: hotelCount },
+      { type: "apartments", count: apartmentCount },
+      { type: "resorts", count: resortCount },
+      { type: "villas", count: villaCount },
+      { type: "cabins", count: cabinCount },
+    ]);
+  } catch (err) {
+    next(err);
   }
 };

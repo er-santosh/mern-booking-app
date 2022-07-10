@@ -11,9 +11,16 @@ const hotelService = {
       throw error;
     }
   },
-  async findAll() {
+  async findAll(query) {
+    const { min, max, limit, ...other } = query;
     try {
-      return await Hotel.find();
+      return await Hotel.find({
+        ...other,
+        cheapestPrice: {
+          $gt: min || 1,
+          $lt: max || 9999,
+        },
+      }).limit(limit);
     } catch (error) {
       throw error;
     }
@@ -101,6 +108,14 @@ const hotelService = {
       } catch (error) {
         throw error;
       }
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async countDocuments(obj) {
+    try {
+      return await Hotel.countDocuments(obj);
     } catch (error) {
       throw error;
     }

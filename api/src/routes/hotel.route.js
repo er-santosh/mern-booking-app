@@ -7,6 +7,8 @@ import {
   deleteHotel,
   addRoom,
   removeRoom,
+  countByCity,
+  countByType,
 } from "../controllers/hotel.controller.js";
 import { IsAdmin } from "../middlewares/auth.middleware.js";
 
@@ -14,6 +16,8 @@ const router = express.Router();
 
 router.get("", getAllHotel);
 router.get("/:id", getOneHotel);
+router.get("/count/by-city", countByCity);
+router.get("/count/by-type", countByType);
 
 router.use(IsAdmin);
 
